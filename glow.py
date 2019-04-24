@@ -177,7 +177,7 @@ class WN(torch.nn.Module):
 
 class WaveGlow(torch.nn.Module):
     def __init__(self, n_mel_channels, n_flows, n_group, n_early_every,
-                 n_early_size, WN_config):
+                 n_early_size, WN_config, **kwargs):
         super(WaveGlow, self).__init__()
 
         self.upsample = torch.nn.ConvTranspose1d(n_mel_channels,
