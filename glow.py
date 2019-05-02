@@ -29,6 +29,8 @@ import torch
 from torch.autograd import Variable
 import torch.nn.functional as F
 
+
+@torch.jit.script
 def fused_add_tanh_sigmoid_multiply(input_a, input_b, n_channels):
     n_channels_int = n_channels[0]
     in_act = input_a+input_b
@@ -180,7 +182,7 @@ class WaveGlow(torch.nn.Module):
 
         self.upsample = torch.nn.ConvTranspose1d(n_mel_channels,
                                                  n_mel_channels,
-                                                 1024, stride=2**kwargs.get("n_strided", 8))
+                                                 1024, stride=kwargs["encoder"]["stride"])
         assert(n_group % 2 == 0)
         self.n_flows = n_flows
         self.n_group = n_group
@@ -211,6 +213,8 @@ class WaveGlow(torch.nn.Module):
 
         #  Upsample spectrogram to size of audio
         spect = self.upsample(spect)
+
+        print(spect.shape)
         assert(spect.size(2) >= audio.size(1))
         if spect.size(2) > audio.size(1):
             spect = spect[:, :, :audio.size(1)]
