@@ -213,8 +213,6 @@ class WaveGlow(torch.nn.Module):
 
         #  Upsample spectrogram to size of audio
         spect = self.upsample(spect)
-
-        print(spect.shape)
         assert(spect.size(2) >= audio.size(1))
         if spect.size(2) > audio.size(1):
             spect = spect[:, :, :audio.size(1)]
